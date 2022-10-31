@@ -1,0 +1,211 @@
+body {
+    margin:0;
+    padding:0;
+    background:black;
+    user-select:none;
+    overflow:hidden;
+    -webkit-user-select : none;
+}
+#cnv{ /*image: https://discoveringegypt.com/*/
+    display:none;
+background:url("https://dl.dropboxusercontent.com/s/lgi9kdy2hnqjvnx/bent3.jpg?dl=0") no-repeat ;
+    background-size:cover;
+    z-index:1;
+}
+#buttons{
+    position:absolute ;
+    display:flex;
+    width:100%;
+    bottom:0;
+    color:black;
+    font-family:"Indie Flower";
+    font-size:1.5em;
+    font-weight:bold ;
+    z-index:2;
+ justify-content:center;
+}
+#btn{
+    display:flex;
+    width:50%;
+    height:40px;
+    margin-left:5px;
+    margin-right:5px;
+    background:transparent;
+    box-shadow:2px -6px 32px 2px black;
+    border-left:1px black inset;
+    align-items:center;
+ justify-content:center;
+}
+#startpage, #startimg, #gameover, #overimg{
+    display:flex;
+    align-items:center;
+   flex-flow: column nowrap;
+}
+#startpage, #gameover{
+    position:absolute ;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+    width:100%;
+    height:100%;
+    z-index:4;
+}
+#startimg{  /*image: https://discoveringegypt.com/*/
+    margin:5%;
+    width:90%;
+    height:90%;
+  background:url("https://dl.dropboxusercontent.com/s/673sa1933z6owob/startLuxor3.jpg?dl=0");
+    box-shadow:1px 2px 50px 20px rgb(178,125,12);
+    background-size:cover;
+    border:1px dotted rgb(178,125,12);
+}
+#overimg{  /*image: https://discoveringegypt.com/*/
+    width:100%;
+    height:100%;
+  background:url(" https://dl.dropboxusercontent.com/s/chwxm6mldd2p4c8/overpage.jpg?dl=0 ");
+    box-shadow:1px 2px 50px 20px rgb(178,125,12);
+    background-size:cover;
+    /*border:1px dotted rgb(178,125,12);*/
+}
+#instr_panel, #over_panel{
+    margin:auto;
+    top:40px;
+    left:0;
+    right:0;
+    width:95%;
+    border-radius:10%;
+    background-color:white;
+    opacity:0.5;
+    box-shadow:1px 2px 30px 15px black;
+}
+#instr_text, #result{
+    margin:10px;
+    top:20px;
+    font-family:'Satisfy',serif;
+    color:black;
+    font-weight:bold;
+    text-align:center;
+}
+#instr_text{
+    font-size:20px;
+}
+ #result{
+   font-size:25px;
+ }
+
+#startbtn,#replay{
+    margin-bottom:5%;
+    width:30%;
+    height:40px;
+    border-radius:20%;
+    background:rgba(178,125,12,0.8);
+    font-family:'Indie Flower';
+    font-size:20px;
+    font-weight:bold;
+    color:black;
+    align-items:center ;
+    justify-content:center;
+    display:flex;
+    box-shadow:1px 2px 30px 15px black;
+    border:5px dotted black;
+    animation:movebutton 2s infinite ;
+}
+@keyframes movebutton {
+    0% {transform:scale(1);}
+    25% {transform:scale(0.95);}
+    50% {transform:scale(1);}
+    75% {transform:scale(0.95);}
+    100% {transform:scale(1);}
+}
+#title{
+    font-family:'Satisfy', serif;
+    font-weight:bold;
+    font-size:20px;
+    color:black;
+    margin-top:5%;   
+    text-align:center;
+} 
+#titleover{
+    font-family:'Satisfy', serif;
+    font-weight:bold;
+    font-size:30px;
+    color:black;
+    margin-top:5%;   
+    text-align:center;
+} 
+#choosepage, #gameover, #startpage {
+    display:none;
+}
+#imgblock{
+    position:absolute ;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    display:flex;
+    flex-direction:row;
+     margin:30% auto auto auto;
+    width:80%;
+    height:200px;
+    z-index:3;
+    background-color:transparent;
+    /*border:2px solid red;*/
+}
+#imga{
+    margin:0;
+    width:100%;
+    height:85%;
+  background:url(" https://www.animatedimages.org/data/media/934/animated-aladdin-image-0350.gif ") no-repeat ;
+    box-shadow:1px 2px 50px 20px rgb(178,125,12);
+    background-size:100%;
+    border:1px dotted rgb(178,125,12);
+}
+
+#imgb{
+    margin:0;
+    width:100%;
+    height:85%;
+  background:url(" https://www.animatedimages.org/data/media/934/animated-aladdin-image-0166.gif") no-repeat ;
+    box-shadow:1px 2px 50px 20px purple;
+    background-size:100%;
+    border:1px dotted rgb(178,125,12);
+}
+#titlech{
+    font-family:'Satisfy',serif;
+    font-weight:bold;
+    font-size:30px;
+    color:grey;
+    margin-top:5%;   
+    text-align:center;
+}
+#loaderpart{
+    position:absolute ;
+    display:flex;
+    width:100%;
+    height:100%;
+    z-index:1;
+}
+#loader{
+    margin:auto;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    border:5px dashed rgba(226,177,247,0.4);
+    box-shadow:1px 2px 50px 20px rgb(178,125,12);
+    animation: move 4s infinite;
+}
+@keyframes move{
+    0%{transform:rotate(0deg);}
+    20%{transform:rotate(180deg);}
+}
+@media(max-height:400px){  /*240px alattiak */
+    #instr_text{
+        font-size:12px;}
+    #instr_panel{
+        margin:0;}
+    #result{
+        font-size:14px;}
+}
+
