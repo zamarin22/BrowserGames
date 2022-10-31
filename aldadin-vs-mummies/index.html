@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Aladin Vs Mummies</title>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link href="https://fonts.googleapis.com/css?family=Lacquer|Indie+Flower|Allura|Butcherman|Courgette|Satisfy" rel="stylesheet">
+     <link rel="stylesheet" href="index.css">   
+    </head>
+    <body>
+       <div id="loaderpart">
+            <div id="loader"></div>
+       </div>
+        
+        <canvas id="cnv"></canvas>
+        
+        <div id="buttons">
+            <div id="btn" onclick="jump()">JUMP</div>
+           <div id="btn" onclick="shoot()">SHOOT</div>
+        </div>
+        
+        <div id="startpage">
+            <div id="startimg">
+                <p id="title">ALADDIN vs MUMMIES</p>
+                <div id="instr_panel">
+                    <div id="instr_text"></div>
+                </div>
+            <div id="startbtn" onclick="startgame()">PLAY</div>
+            </div>
+         </div>
+         
+         <div id="choosepage">    
+                <p id="titlech">Choose a player</p>
+                <div id="imgblock">
+                    <div id="imga" onclick="choosea()"></div>
+                    <div id="imgb" onclick ="chooseb()" ></div>
+                </div>
+         </div>
+         
+         <div id="gameover">  
+               <div id="overimg">
+                    <p id="titleover">Game over</p>
+                    <div id="over_panel">
+                        <div id="result"></div>
+                    </div>
+                <div id="replay" onclick="restart()">REPLAY</div>
+            </div>
+         </div>     
+                
+        <script type="text/javascript">
+//*********LOADER***********      
+        function loading(){
+            loaderpart.style.display="none";
+            startpage.style.display="block";
+        }
+        setTimeout(loading,5000);
+//*********TEXTTYPING********               
+        var instr="Aladdin and Jasmine travelled to the ancient Egypt to help the Pharaoh Tutankhamun to protect the treasures from the mummies. Your mission is to beat the 50 mummies and to jump over the traps. You have 10 magiclives, but Jasmine always brings some new ones. Good luck!" ;
+        var typet=document.getElementById("instr_text");
+        var i=0;
+        function t(){
+            typet.innerHTML+=instr.charAt(i);
+            i++;
+        }
+        setInterval(t,80);
+        
+//********CANVAS START******           
+            var w=window.innerWidth;
+            var h=window.innerHeight;
+            
+            var cnv=document.getElementById("cnv");
+            var ctx=cnv.getContext("2d");
+            cnv.width=w;
+            cnv.height=h;
+//******BUTTONS FUNCTIONS******
+function choosea(){
+    aladdinImg.src= " https://www.animatedimages.org/data/media/934/animated-aladdin-image-0350.gif ";
+    carpety=h+370;
+    afterchoose();
+} 
+function chooseb(){
+    aladdinImg.src =" https://www.animatedimages.org/data/media/934/animated-aladdin-image-0166.gif ";
+    carpety=h-73;
+    afterchoose();
+}
+ function shoot(){
+     var s=new drawS();
+     shot.push(s);
+ }
+ function jump(){
+       aladdiny-= 60;
+       carpety-=30;
+       setTimeout(down,790)
+   }
+   function down(){
+       aladdiny+=60;
+       carpety+=30;
+   }
+//*******CIRCLE******
+    var circ=function(x,y,r,fillCircle,color,outline){
+        ctx.beginPath();
+        ctx.arc(x,y,r,0,Math.PI*2,false);
+            if(fillCircle){
+                ctx.fill();
+            }else{
+                ctx.stroke();
+            }
+    }
+//*****ALADDIN, GENIE*****   
+    var aladdinWidth=100;
+    var aladdinHeight=100;
+    var aladdinImg=new Image();
+    var aladdinx=10;
+    var aladdiny=h-160;
+ 
+    function aladdin(x,y,width,height){
+        this.x= aladdinx;
+        this.y= aladdiny;
+        this.width=width;
+        this.height=height;
+        
+        this.drawa=function(){
+            ctx.beginPath();
+       ctx.drawImage(aladdinImg,aladdinx, aladdiny, aladdinWidth, aladdinHeight)
+       ctx.fill();
+        }
+        this.update=function(){
+            this.drawa();
+        }
+   }
+   var alad=new aladdin(aladdinImg,aladdinx, aladdiny, aladdinWidth, aladdinHeight);
+//*****ALADDIN,GENIE MOVE*****  
+var a=10
+var b=0;
+var grav=10;
+var s=10;
+    function fly(){
+        aladdinx=a*Math.sin(b*2)+w/16;
+        b+=0.12;
+       }  
+    setInterval(function(){
+        fly();
+    },100);
+//******MUMMY******
+   var mummyWidth=100;
+    var mummyHeight=100;
+    var mummyImg=new Image();
+    mummyImg.src= "https://dl.dropboxusercontent.com/s/vjcx0qbj02eldtq/Mummyford.gif?dl=0";
+    
+    var mummyspeed;//=-1.0;
+    var mummy=[];
+    
+    function randomnum(min,max){  // https://www.codegrepper.com/code-examples/javascript/javascript+get+random+number+in+range
+        return Math.floor(Math.random()*(max-min+1)+min);
+     }
+//-----------------------
+    function createMummy(){
+        var m=new drawM();
+        m.y=h-145;// mummies move in a row   
+       var randomspeed= Math.random()*(-3.5);
+        m.speed=randomspeed;
+        
+        mummy.push(m);
+   }   
+//----------------------
+   function drawMummies(){ //more mummies
+        for(var i=0; i<mummy.length;i++){
+            if( mummy[i].nottobe==false ){
+                mummy[i].movem();
+                mummy[i].drawm();
+              //  mummy[i].y=h-145;
+            }else{
+                mummy[i].nottobe==true;
+            }
+            if(mummy[i].x<-50){    //if they reach x=0
+                mummy.splice(i,1);
+            }
+        }
+     }      
+//--------------------------
+    function drawM(){
+        this.x=w;
+        this.y=h-145;//h/2;
+        this.width=mummyWidth;
+        this.height =mummyHeight;
+        this.speed =mummyspeed;
+        this.nottobe=false;
+        
+        this.drawm=function(){
+            ctx.beginPath();
+             ctx.drawImage(mummyImg,this.x, this.y, mummyWidth, mummyHeight)
+            ctx.fill();
+        }
+        this.movem=function(){
+            this.x+=this.speed;
+            this.drawm();
+        }
+       }
+//*********LIFE,GOLDCOINS********
+    var life=10;
+    var mummynum=50;
+    var color;
+    
+    //https://jsfiddle.net/alexaaaant/d32eLofa/
+ WebFontConfig = {
+      google: { families: ['Indie Flower'] }, //👈 insert the googlefont
+      active: function () { lifeTreasure(); },
+    };
+    (function () {
+      var wf = document.createElement("script");
+      wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.10/webfont.js';
+      wf.async = 'true';
+      document.head.appendChild(wf);
+    })();
+    
+    function lifeTreasure(){
+        color=ctx.createLinearGradient(w*.1,0,w-(w*.2),30)
+        color.addColorStop(0.0,"rgba(224,278,226,0.4)");
+color.addColorStop(0.2,"rgba(224,28,206,0.4)");
+color.addColorStop(0.6,"rgba(224,278,206,0.4)");
+color.addColorStop(0.7,"rgba(224,28,206,0.4)");
+color.addColorStop(1.0,"rgba(224,278,206,0.4)");
+
+          ctx.beginPath();
+          ctx.rect(w*.1,0,w-(w*.2),30);
+          ctx.fillStyle=color;  
+          ctx.fill();   
+          
+          ctx.beginPath();
+          ctx.fillStyle="black";
+          ctx.fillText("Life: "+life,w*.2,22);
+          ctx.fillText("Mummies: "+mummynum,w-(w*.45),22);
+          ctx.font="bold 1.5em Indie Flower";
+          ctx.fill();   
+    }
+
+//***********SHOT***********
+  var shotspeed=3.5;
+  //var shoty= aladdiny+35;
+  var shot=[]; 
+  
+    function drawShots(){
+        for(var i=0; i<shot.length;i++){
+            shot[i].moves();
+            shot[i].draws();
+            //shot[i].y= aladdiny+35;
+            if(shot[i].x>w){
+                shot.splice(i,1);
+            }
+        }
+    } 
+//--------------       
+    function drawS(){
+        this.x= aladdinx+60;
+        this.y= aladdiny+35; ;
+        this.speed= shotspeed;
+           
+        //this.color="black";
+       // this.outline="purple";
+        
+        this.moves= function(){
+            this.x+= shotspeed ;
+        }
+        this.draws= function(){
+            ctx.strokeStyle="purple";
+            ctx.fillStyle="black";
+            ctx.lineWidth=1;
+            
+            circ(this.x,this.y,5,true);
+            circ(this.x+3,this.y-1,3,false);
+        /*  circ(this.x+3,this.y-8,2,true);
+            circ(this.x+3,this.y-8,2,false);
+            circ(this.x-5,this.y-5,2,true);
+            circ(this.x-5,this.y-5,2,false);
+            circ(this.x+8,this.y-5,2,true);
+            circ(this.x+8,this.y-5,2,false);*/
+        }
+    }                        
+//********COLLISION********
+    function coll_Trap_Mummy_Shot(){
+    
+        for(var i=0; i<trap.length;i++){
+            if(life<=0 || mummynum<=0){
+                 trap[i].nottobe=true;
+            }
+            
+            if( trap[i].y+25>=aladdiny && trap[i].x+30>= aladdinx && aladdiny+120>=trap[i].y && aladdinx+70>=trap[i].x){
+            trap[i].nottobe=true;
+            trap.splice(i,1);
+            
+            for(var d=0; d<2;d++){
+                var bada= new drawBoom();
+                bada.x= aladdinx+50;
+                bada.y= aladdiny;
+                boom.push(bada);
+            }
+            if(life>0){
+                life--;
+            }else{
+                life=0;
+            }
+            createH();
+        }
+        }
+//-----------------        
+        for(var i=0; i<bonus.length;i++){
+            if(life<=0 || mummynum<=0){
+                 bonus[i].nottobe=true;
+            }
+            if( bonus[i].y+1>=aladdiny && bonus[i].x+30>=aladdinx && aladdiny+80>=bonus[i].y && aladdinx+80>= bonus[i].x){
+            bonus[i].nottobe=true;
+            bonus.splice(i,1);
+            life+=2;    
+            
+        }
+        }
+//-----------------                 
+        for(var i=0; i<mummy.length;i++){
+            if(life<=0 || mummynum<=0){
+                 mummy[i].nottobe=true;
+            }
+            if( mummy[i].y+120>=aladdiny && mummy[i].x+100>=aladdinx && aladdiny+120>=mummy[i].y && aladdinx+70>= mummy[i].x){
+            mummy[i].nottobe=true;
+            mummy.splice(i,1);
+            
+            for(var d=0; d<2;d++){
+                var bada= new drawBoom();
+                bada.x= aladdinx+50;
+                bada.y= aladdiny;
+                boom.push(bada);
+            }
+            
+            if(life>0){
+                life--;
+            }else{
+                life=0;
+            }
+            
+            createH();
+        }
+        }
+//-----------------      
+        for(var i=0; i<shot.length;i++){
+            for(var j=0; j<mummy.length; j++){
+                if(shot[i]){
+                    if(shot[i].y+1>=mummy[j].y && shot[i].x-30>= mummy[j].x && mummy[j].y+100>= shot[i].y && mummy[j].x+100>= shot[i].x ){
+                        for(var z=0; z<5; z++){
+                            var p=new drawP();
+                            p.x= mummy[j].x;
+                            p.y= mummy[j].y;
+                            
+                            particle.push(p);
+                        }  
+                        for(var u=0; u<1; u++){
+                            var lm=new lostdrawM();
+                            lm.x= mummy[j].x;
+                            lm.y=mummy[j].y;
+                            lostmummy.push(lm);
+                        }  
+                        if(mummynum>0){
+                            mummynum--;
+                        }else{
+                            mummynum =0;
+                        }
+    
+                        shot.splice(i,1);
+                        mummy.splice(j,1);
+                    }
+                }
+               
+                
+            }
+        }
+        
+    }
+//********LOSTMUMMY*********
+    var lostmummyWidth=100;
+    var lostmummyHeight=100;
+    var lostmummyImg=new Image();
+    lostmummyImg.src=" https://www.animatedimages.org/data/media/37/animated-egypt-image-0134.gif"
+    var lostmummyspeed=3.0;
+    var lostmummy=[];
+    
+ //-----------------------
+  /*  function createLostMummy(){
+        var lm=new lostdrawM();
+        lm.y=h-145;// mummies move in a row
+        lostmummy.push(lm);
+    }
+   */
+//----------------------
+    function drawLostMummies(){ //more mummies
+        for(var i=0; i<lostmummy.length;i++){
+            lostmummy[i].lmove();
+            lostmummy[i].ldraw();
+            if(lostmummy[i].x>w-20){    
+                lostmummy.splice(i,1);
+            }
+        }
+     }  
+//--------------------------
+    function lostdrawM(){
+       this.x=w;//w-w/3;
+       this.y=h;//h/2;
+        this.width=lostmummyWidth;
+        this.height =lostmummyHeight;
+        this.speed =lostmummyspeed;
+       
+        this.ldraw=function(){
+            ctx.beginPath();
+             ctx.drawImage(lostmummyImg,this.x, this.y, lostmummyWidth, lostmummyHeight)
+            ctx.fill();
+        }
+        this.lmove=function(){
+           this.x+=this.speed;
+        }
+       }
+//*******MUMMY PARTICLES*******
+var particle=[];
+      function drawParticles(){
+        for(var i=0; i< particle.length;i++ ){
+            particle[i].movep();
+            particle[i].drawp();
+            if( particle[i].x>w-30 ){
+                particle.splice(i,1);
+            }
+            /*if( particle[i].y>h-50 ){
+                particle.splice(i,1);
+            }
+            if( particle[i].y<30 ){
+                particle.splice(i,1);
+            }*/
+        }
+      }   
+//------------
+    function drawP(){
+        this.x= w;
+        this.y= h;
+        this.speedx= Math.random()*20 ;
+        this.speedy= Math.random()*28-10;//38-20
+        
+        this.movep= function(){
+            this.x+= this.speedx;
+            this.y+= this.speedy;
+        }
+        this.drawp= function(){
+            ctx.strokeStyle="purple";
+            ctx.fillStyle="black";
+            ctx.lineWidth=2;
+            
+            circ(this.x+3,this.y-1,3,true);
+            circ(this.x+3,this.y-1,2,false);   
+        }  
+    }
+//*********TRAP*******
+var speedtrap=-2.5;
+var trap=[];
+
+    function createT(){
+        var tr=new drawT();
+        tr.y=h-70;
+        trap.push(tr);    
+    }    
+//----------
+    function drawTraps(){
+        for(var i=0;i<trap.length;i++){
+            if( trap[i].nottobe==false ){
+                trap[i].movet();
+                trap[i].drawt();
+            }else{
+                 trap[i].nottobe==true;
+            }
+            if( trap[i].x<0 ){
+                trap.splice(i,1);
+            }
+        }
+    }
+//---------
+    function drawT(){
+        this.x=w;
+        this.y=h;
+        this.speedtx=speedtrap;
+        this.nottobe=false;
+        
+        this.drawt=function(){
+            ctx.beginPath();
+            ctx.fillStyle="gold";
+            ctx.strokeStyle="black";
+            ctx.lineWidth=2;
+            ctx.moveTo(this.x+10,this.y-10);
+            ctx.lineTo(this.x+5,this.y+28);
+            ctx.lineTo(this.x+15,this.y+28);
+            ctx.lineTo(this.x+10,this.y-10);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.fillStyle="orange";
+            ctx.lineWidth=2;
+            ctx.moveTo(this.x+20,this.y+5);
+            ctx.lineTo(this.x+15,this.y+28);
+            ctx.lineTo(this.x+25,this.y+28);
+            ctx.lineTo(this.x+20,this.y+5);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.fillStyle="gold";
+            ctx.lineWidth=2;
+            ctx.moveTo(this.x+35,this.y+5);
+            ctx.lineTo(this.x+20,this.y+28);
+            ctx.lineTo(this.x+35,this.y+28);
+            ctx.lineTo(this.x+35,this.y+5);
+            ctx.fill();
+            ctx.stroke();
+        }
+        this.movet=function(){
+            this.x+=this.speedtx;
+        }
+   }
+//********LOSTLIFE HEART*********
+var heartWidth=20;
+var heartHeight=20;
+var heartImg=new Image();
+heartImg.src="https://www.animatedimages.org/data/media/373/animated-heart-image-0459.gif"
+var speedheart=-1.5;
+var heart=[];
+
+    function createH(){
+        var hrt=new drawHrt();
+        hrt.x=aladdinx+50;
+        heart.push(hrt);
+     }
+//--------
+     function drawHearts(){
+         for(var i=0;i<heart.length;i++){
+            heart[i].movehrt();
+            heart[i].drawhrt();
+            if( heart[i].y<30 ){
+                heart.splice(i,1);
+            }
+        }
+    }
+//----------
+    function drawHrt(){
+        this.x=aladdinx;
+        this.y=aladdiny;
+        this.width= heartWidth ;
+        this.height= heartHeight ;
+        this.speedh= speedheart ;
+        
+        this.drawhrt=function(){
+            ctx.drawImage(heartImg, this.x, this.y, heartWidth, heartHeight);
+        }
+        this.movehrt=function(){
+            this.y+=speedheart;
+        }
+    }   
+//***********JASMINE********
+    var jasmineWidth=80; 
+    var jasmineHeight =50;
+    var jasmineImg =new Image();
+    jasmineImg.src="https://www.animatedimages.org/data/media/934/animated-aladdin-image-0339.gif"
+    var jasminespeed=-1.0;
+    var jasmine =[];
+//-----------------------
+    function createJasmine(){
+        var j=new drawJ();
+        j.y=h/24;//h/2-30;
+        
+        jasmine.push(j);
+    }    
+//----------------------
+    function drawJasmines(){ 
+        for(var i=0; i<jasmine.length;i++){
+            jasmine[i].movem();
+            jasmine[i].drawm();
+            if(jasmine[i].x<0){    
+                jasmine.splice(i,1);
+            }
+        }
+     }  
+//--------------------------
+    function drawJ(){
+        this.x=w;
+        this.y=h;
+        this.width= jasmineWidth;
+        this.height =jasmineHeight;
+        this.speed =jasminespeed;
+        
+        this.drawm=function(){
+            ctx.beginPath();
+             ctx.drawImage( jasmineImg,this.x, this.y, jasmineWidth , jasmineHeight )
+            ctx.fill();
+        }
+        this.movem=function(){
+            this.x+=this.speed;
+            this.drawm();
+        }
+       }
+//*********JASMINE BONUSLIFE******
+    var bonusWidth=30; 
+    var bonusHeight =30;
+    var bonusImg =new Image();
+    bonusImg.src= "https://www.animatedimages.org/data/media/373/animated-heart-image-0459.gif";
+    var bonusspeed=-1.0;
+    var bonus =[];
+//-----------------------
+    function createBonus(){
+        var b=new drawB();
+        b.y=h/24;//h/2-30+12;
+        b.x=w-22;
+        
+        bonus.push(b);
+    }    
+//----------------------
+    function drawBonus(){ 
+        for(var i=0; i<bonus.length;i++){
+            if( bonus[i].nottobe==false ){
+                bonus[i].movem();
+                bonus[i].drawm();
+            }else{
+                bonus[i].nottobe==true;
+            }
+            if( bonus[i].x<-20){    
+                bonus.splice(i,1);
+            }
+        }
+     }       
+//--------------------------
+    function drawB(){
+        this.x=w;
+        this.y=h;
+        this.width= bonusWidth ;
+        this.height = bonusHeight ;
+        this.speedx = bonusspeed ;
+        this.speedy=1.0;
+        this.nottobe=false;
+        
+        this.drawm=function(){
+            ctx.beginPath();
+             ctx.drawImage( bonusImg ,this.x, this.y, bonusWidth , bonusHeight )
+            ctx.fill();
+        }
+        this.movem=function(){
+            this.x+=this.speedx;
+            if(this.x<=aladdinx){
+                this.y+=this.speedy;
+                this.x=aladdinx;
+            }
+            this.drawm();
+        }
+       }
+//*********CARPET*********
+    var carpetWidth=140; 
+    var carpetHeight =50;
+    var carpetImg =new Image();
+    carpetImg.src= " https://www.animatedimages.org/data/media/934/animated-aladdin-image-0325.gif";
+   // var carpetx =100;
+    var carpety=h-70;
+    
+    function carpet(x,y,width,height){
+        this.x= aladdinx-20;
+        this.y= carpety ;
+        this.width= carpetWidth ;
+        this.height= carpetHeight ;
+        
+        this.draw=function(){
+            ctx.beginPath();
+       ctx.drawImage( carpetImg , aladdinx-20 , carpety , carpetWidth , carpetHeight )
+            ctx.fill();
+        }
+        this.update=function(){
+            this.draw();
+        }
+   }
+   var carpi=new carpet( carpetImg , aladdinx-20, carpety , carpetWidth , carpetHeight ); 
+//********BOOM*********
+var boomWidth=100;  
+var boomHeight=100;
+var boomImg=new Image();
+boomImg.src=" https://www.animatedimages.org/data/media/1005/animated-bomb-image-0002.gif";
+var speedboom=-1.5;
+var boom =[];
+//--------
+     function drawBooms(){
+         for(var i=0;i<boom.length;i++){
+            boom[i].move();
+            boom[i].draw();
+            if( boom[i].y< aladdiny ){
+                boom.splice(i,1);
+            }
+        }
+    }
+//----------
+    function drawBoom(){
+        this.x=aladdinx;
+        this.y=aladdiny;
+        this.width= boomWidth ;
+        this.height= boomHeight ;
+        this.speed= speedboom ;
+        
+        this.draw=function(){
+            ctx.drawImage( boomImg , this.x, this.y, boomWidth , boomHeight );
+        }
+        this.move=function(){
+            this.y+= speedboom ;
+        }
+    }   
+//==============
+function startgame(){ //play button
+     startpage.style.display="none";
+     choosepage.style.display="block";
+}
+function afterchoose(){
+     cnv.style.display="block";
+     choosepage.style.display="none";
+  
+     drawM();
+     createMummy();
+     drawB();
+     createBonus()
+     drawJ();
+     createJasmine();
+     drawT();
+     createT();
+     
+     setInterval(function(){
+        createBonus();
+    },19000); 
+
+     setInterval(function(){
+        createJasmine();
+    },19000); 
+    
+    setInterval(function(){
+        createT();
+    },5400);
+    
+    setInterval(function(){
+        createMummy();
+    },2000);
+    
+    setInterval(function(){
+        ctx.clearRect(0,0,w,h);
+            alad.update();
+            carpi.update();                     
+            lifeTreasure();
+            drawMummies();
+            drawShots();
+            drawLostMummies();            
+            drawParticles();
+            drawTraps();            
+            drawHearts();
+            drawJasmines();
+            drawBonus();   
+            drawBooms();    
+           coll_Trap_Mummy_Shot();
+    
+            if(life==0 || mummynum==0){
+                cnv.style.display="none";
+                gameover.style.display="block";
+                 if(life<mummynum){
+                     result.innerHTML="Your mission failed. You don't have more magiclives and there are still "+mummynum+" mummies left. Try it again."
+                 }else{
+                     result.innerHTML="Congrats!! You beat every mummies and protected the treasures."
+                 }
+            }
+        ctx.strokeRect(0,0,w,h);
+    },10);
+            
+ }//choosepage end   
+//************REPLAY**********
+function restart(){
+    gameover.style.display="none";
+    cnv.style.display="block";
+    life=10;
+    mummynum=50;
+    mummy=[];
+    heart=[];
+    trap=[];
+    bonus=[];
+    jasmine=[];   
+}
+         
+        </script>   
+    </body>
+</html>
