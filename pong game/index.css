@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  canvas {
+    /*cursor: pointer;*/
+    background: #F8F8F8;
+    border-style: groove;
+  }
+  
+  .wrapper{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: auto;
+  }
